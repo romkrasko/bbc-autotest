@@ -1,11 +1,12 @@
 package com.gmail.romkrasko;
 import com.gmail.romkrasko.BrowserFactory;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 import static com.gmail.romkrasko.BrowserFactory.*;
 
@@ -26,16 +27,20 @@ public class BaseTest {
         searchField.sendKeys("lol");
         WebElement headerNews = driver.findElement(By.cssSelector("#orb-nav-links .orb-nav-newsdotcom a"));
         headerNews.click();
-        boolean inputEnabled = driver.findElement(By.cssSelector("#orb-nav-links .orb-nav-newsdotcom a")).isEnabled();
-        boolean inputDisplayed = driver.findElement(By.cssSelector("#orb-nav-links .orb-nav-newsdotcom a")).isDisplayed();
+        WebElement searchString = driver.findElement(By.cssSelector("#orb-search-q"));
+        boolean inputEnabled = driver.findElement(By.cssSelector("#orb-search-q")).isEnabled();
+        boolean inputDisplayed = driver.findElement(By.cssSelector("#orb-search-q")).isDisplayed();
 
-        if (inputEnabled==true) {
+        if (inputEnabled == true) {
             System.out.println("verification success for isEnabled() method");
         }
 
-        if (inputDisplayed==true) {
+        if (inputDisplayed == true) {
             System.out.println("verification success for isDisplayed() method");
         }
+
+        WaitUntilElementIsDisplay(searchString);
+        WaitUntilElementIsEnable(searchString);
     }
 
     @AfterTest
@@ -43,6 +48,32 @@ public class BaseTest {
         if (driver != null) {
             driver.quit();
         }
+    }
+
+    public void WaitUntilElementIsDisplay(WebElement element) {
+        (new WebDriverWait(driver, 10)).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                try {
+                    return element.isDisplayed();
+                }
+                catch (NoSuchElementException e) {
+                    return false;
+                }
+            }
+        });
+    }
+
+    public void WaitUntilElementIsEnable(WebElement element) {
+        (new WebDriverWait(driver, 10)).until(new ExpectedCondition<Boolean>() {
+            public Boolean apply(WebDriver d) {
+                try {
+                    return element.isEnabled();
+                }
+                catch (NoSuchElementException e) {
+                    return false;
+                }
+            }
+        });
     }
 
 }
