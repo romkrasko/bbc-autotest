@@ -26,6 +26,8 @@ public class BaseTest {
         WebElement searchField1 = driver.findElement(By.cssSelector("#orb-search-q"));
         WaitUntilElementIsEnable(searchField1);
         WaitUntilElementIsEnable(searchField);
+        WaitUntilElementIsDisplay(searchField1);
+        WaitUntilElementIsDisplay(searchField);
     }
 
     @AfterTest
@@ -44,10 +46,32 @@ public class BaseTest {
             }
             try {
                 System.out.println(element.isEnabled());
-                    break;
+                break;
 
             }catch (NoSuchElementException e) {}
-           catch (StaleElementReferenceException e){
+            catch (StaleElementReferenceException e){
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.out.println("lol((");
+            }
+        }
+    }
+
+    public void WaitUntilElementIsDisplay(WebElement element) {
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            if (System.currentTimeMillis() - startTime > 10000) {
+                System.out.println("Time out(");
+                break;
+            }
+            try {
+                System.out.println(element.isDisplayed());
+                break;
+
+            }catch (NoSuchElementException e) {}
+            catch (StaleElementReferenceException e){
             }
             try {
                 Thread.sleep(500);
