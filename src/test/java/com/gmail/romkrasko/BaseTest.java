@@ -23,8 +23,9 @@ public class BaseTest {
         searchField.sendKeys("lol");
         WebElement headerNews = driver.findElement(By.cssSelector("#orb-nav-links .orb-nav-newsdotcom a"));
         headerNews.click();
-        WaitUntilElementIsEnable();
-        WaitUntilElementIsDisplay();
+        WebElement searchField1 = driver.findElement(By.cssSelector("#orb-search-q"));
+        WaitUntilElementIsEnable(searchField1);
+        WaitUntilElementIsEnable(searchField);
     }
 
     @AfterTest
@@ -34,16 +35,19 @@ public class BaseTest {
         }
     }
 
-    public void WaitUntilElementIsEnable() {
+    public void WaitUntilElementIsEnable(WebElement element) {
         long startTime = System.currentTimeMillis();
         while (true) {
             if (System.currentTimeMillis() - startTime > 10000) {
-                throw new TimeoutException();
+                System.out.println("Time out(");
+                break;
             }
             try {
-                System.out.println(driver.findElement(By.cssSelector("#orb-search-q")).isEnabled());
-                break;
-            } catch (NoSuchElementException e) {
+                System.out.println(element.isEnabled());
+                    break;
+
+            }catch (NoSuchElementException e) {}
+           catch (StaleElementReferenceException e){
             }
             try {
                 Thread.sleep(500);
@@ -52,25 +56,4 @@ public class BaseTest {
             }
         }
     }
-
-    public void WaitUntilElementIsDisplay() {
-        long startTime = System.currentTimeMillis();
-        while (true) {
-            if (System.currentTimeMillis() - startTime > 10000) {
-                throw new TimeoutException();
-            }
-            try {
-                System.out.println(driver.findElement(By.cssSelector("#orb-search-q")).isDisplayed());
-                break;
-            } catch (NoSuchElementException e) {
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.out.println("lol((");
-            }
-        }
-    }
-
-
 }
